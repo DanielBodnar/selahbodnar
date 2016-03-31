@@ -6,4 +6,5 @@ Each version will correspond with her age: yy.mm.dd
 
 ##Milestones:
 
-###1.0.0 (first birthday): website that changes background color based on keycode of key pressed, and plays a sound based on number key pressed.
+###1.0.0 (first birthday): 
+Website that changes background color based on keycode of key pressed, and plays a sound based on number key pressed.

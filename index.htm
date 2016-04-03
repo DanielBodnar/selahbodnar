@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <title>First Birthday - Selah Bodnar</title>
+</head>
+<script>
+  var bg = [255, 255, 255];
+
+  document.addEventListener("keypress", function onKeypress(event) {
+    element = document.getElementById(String.fromCharCode(event.charCode || event.char));
+
+    bg.shift();
+    bg.push(Number((((event.charCode || event.char) - 96) * 9.8).toFixed(0)));
+
+    console.log(bg);
+    document.body.style.backgroundColor = 'rgb(' + bg[0] + ',' + bg[1] + ',' + bg[2] + ')';
+
+    if (element) {
+      element.style.backgroundColor = "#004f40";
+      keypress.push(record);
+    }
+  }, false);
+</script>
+
+<body>
+  <div class="birthday-msg" style="text-align:center; vertical-align:middle; height:100%; display:table; width:100%">
+    <div style="display:table-cell; vertical-align:middle; text-align:center; width:100%"><h1 style="font-size:100px; font-family:helvatica">HAPPY BIRTHDAY SELAH!!</h1></div>
+  </div>
+</body>
+</html>

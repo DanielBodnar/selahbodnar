@@ -14,6 +14,8 @@ function ran_col() { //function name
 }
 
 var celebrating = false;
+var prevSound;
+
 
 document.addEventListener("keypress", function onKeypress(event) {
 	if (!celebrating && (event.charCode === currentLetter || event.charCode === (currentLetter + 32))) {
@@ -23,10 +25,15 @@ document.addEventListener("keypress", function onKeypress(event) {
 		bg.shift();
 		bg.push(Number((((event.charCode || event.char) - 96) * 9.8).toFixed(0)));
 
-		var celebrationSound = sounds[Math.floor(Math.random() * (sounds.length - 1)) + 1];
+		var celebrationSound = sounds.splice(Math.floor(Math.random() * (sounds.length - 1)) + 1, 1)[0];
+    
+		if (prevSound) sounds.push(prevSound);
+		prevSound = celebrationSound;
+
 
 		var p = playAudio(celebrationSound).autoplay();
 		let interval = window.setInterval(ran_col, 50);
+
 		p.on('durationchange', function () {
 			let duration = p.element().duration;
 
@@ -44,9 +51,6 @@ document.addEventListener("keypress", function onKeypress(event) {
 				celebrating = false;
 			}, duration * 1000);
 
-		})
-
-
-
+		});
 	}
 }, false);

@@ -1,8 +1,8 @@
 {
-  "name": "selahbodnar",
-  "productName": "Selahbodnar",
-  "version": "0.0.0",
-  "description": "My awe-inspiring app",
+  "name": "SNB",
+  "productName": "SNB",
+  "version": "0.1.0",
+  "description": "An app to teach my daughter the alphabet and cultivate a love for programming.",
   "license": "MIT",
   "repository": "DanielBodnar/selahbodnar",
   "author": {

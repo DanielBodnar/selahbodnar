@@ -1,17 +1,11 @@
 'use strict';
 
-require('babel-core/register');
-require("babel-polyfill");
-
 var electron = require('electron');
 var P = require('bluebird');
-var fs = P.promisifyAll(require('fs-extra'));
+var fs = require('fs');
 var app = electron.app;
 
-global.sounds = fs.readdirSync('./sounds').map(function (s) {
-	return './sounds/' + s;
-});
-console.log(sounds);
+global.sounds = fs.readdirSync('./sounds').map(s => './sounds/' + s);
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
@@ -31,7 +25,7 @@ function createMainWindow() {
 		height: 1080
 	};
 
-	if (process.env.NODE_ENV === 'prod') conf.kiosk = true;
+	if (process.env.FULLSCREEN != 'false') conf.kiosk = true;
 	var win = new electron.BrowserWindow(conf);
 
 	win.loadURL('file://' + __dirname + '/index.html');

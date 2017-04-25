@@ -1,21 +1,60 @@
 var bg = [255, 255, 255]
 let randomize = true
 
-let min = 65
-let max = 90
+let startingLetter = 65
+let endingLetter = 90
 
-function getRandomInt () {
+function getRandomInt (min = startingLetter, max = endingLetter) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 let randomLetter = getRandomInt
 var currentLetter = getRandomInt()
+var letter = String.fromCharCode(currentLetter)
 
 var remote = require('electron').remote
 let sounds = remote.getGlobal('sounds')
+let googleTTS = remote.require('google-tts-api')
 let play = playAudio(sounds).preload()
 
-function ran_col () { // function name
+let phrases = ['Can you say the ', 'How about ', 'Where is ']
+let congrats = ['Good job!', 'Well done!', 'I\'m so proud of you!', 'You\'re so smart!']
+
+let getRandom = (arr) => arr[Math.floor(Math.random() * (arr.length - 1 + 1)) + 1]
+
+let speechInterval
+
+let playSound = (sound) => {
+  return new Promise(function (resolve, reject) {
+    let p = playAudio(sound).autoplay()
+    p.on('durationchange', function () {
+      let duration = p.element().duration
+
+      setTimeout(function () {
+        p.pause()
+        resolve()
+      }, duration * 1000)
+    })
+  })
+}
+
+let speak = () => {
+  if (speechInterval) {
+    clearInterval(speechInterval)
+  }
+  googleTTS(letter, 'en', 1).then((url) => {
+    return playSound(url).then(() => {
+      speechInterval = setInterval(() => playSound(url), 10000)
+      return speechInterval
+    })
+  })
+	// .then((url) => {
+	//   return playSound(url)
+	// })
+}
+speak()
+
+function randomColor () { // function name
   var color = '#' // hexadecimal starting symbol
   var letters = ['000000', 'FF0000', '00FF00', '0000FF', 'FFFF00', '00FFFF', 'FF00FF', 'C0C0C0'] // Set your colors here
   color += letters[Math.floor(Math.random() * letters.length)]
@@ -44,27 +83,38 @@ let onKeyPress = function onKeypress (event) {
     if (prevSound) sounds.push(prevSound)
     prevSound = celebrationSound
 
-    var p = playAudio(celebrationSound).autoplay()
-    let interval = window.setInterval(ran_col, 50)
+    if (speechInterval) {
+      clearInterval(speechInterval)
+    }
 
-    p.on('durationchange', function () {
-      let duration = p.element().duration
+    let interval = window.setInterval(randomColor, 50)
 
-      setTimeout(function () {
-        clearInterval(interval)
-        p.pause()
-				// document.body.style.backgroundColor = 'rgb(' + bg[0] + ',' + bg[1] + ',' + bg[2] + ')';
-        if (element) {
-          element.style.backgroundColor = '#004f40'
-					// keypress.push(record)
-        }
+    playSound(celebrationSound).then(function () {
+      clearInterval(interval)
+      if (element) {
+        element.style.backgroundColor = '#004f40'
+				// keypress.push(record)
+      }
 
-        currentLetter = getRandomInt() // : (currentLetter <= max ? currentLetter + 1 : min)
+      currentLetter = getRandomInt() // : (currentLetter <= max ? currentLetter + 1 : min)
+      letter = String.fromCharCode(currentLetter)
+      document.getElementById('msg').innerHTML = letter
+      celebrating = false
 
-        document.getElementById('msg').innerHTML = String.fromCharCode(currentLetter)
-        celebrating = false
-      }, duration * 1000)
+      return speak(letter)
     })
+		//
+		// var p = playAudio(celebrationSound).autoplay()
+		// let interval = window.setInterval(randomColor, 50)
+		//
+		// p.on('durationchange', function () {
+		//   let duration = p.element().duration
+		//
+		//   setTimeout(function () {
+		//     clearInterval(interval)
+		//     p.pause()
+		//   }, duration * 1000)
+		// })
   }
 }
 
